@@ -1,4 +1,5 @@
 #include<iostream>
+#include<fstream>
 #include<string>
 #include<stdio.h>
 #include"Customer.h"
@@ -643,6 +644,88 @@ void showsummary()
 	}
 
 }
+void writedata()
+{
+	ofstream fw("airplane.txt", ios::out / ios::app);
+	for (x = 0; x < customer.size(); x++)
+	{
+		fw << customer[x].getname() << endl;
+		fw << customer[x].getid() << endl;
+		fw << customer[x].getaddress() << endl;
+		fw << customer[x].getemail() << endl;
+		fw << customer[x].getname() << endl;
+
+	}
+	for (x = 0; x < flightlist.size(); x++)
+	{
+		fw << flightlist[x].getflightid() << endl;
+		fw << flightlist[x].getflightname() << endl;
+		fw << flightlist[x].getsource() << endl;
+		fw << flightlist[x].getdestination() << endl;
+		fw << flightlist[x].gettime1() << endl;
+		fw << flightlist[x].gettime2() << endl;
+		fw << flightlist[x].getseatsavailable() << endl;
+
+	}
+	for (x = 0; x < customerreserve.size(); x++)
+	{
+		fw << customerreserve[x].getid() << endl;
+		fw << customerreserve[x].getname() << endl;
+		fw << customerreserve[x].getemail() << endl;
+		fw << customerreserve[x].getaddress() << endl;
+		fw << customerreserve[x].gethalal() << endl;
+	}
+	fw.close();
+}
+void readdata()
+{
+	ifstream fr("airplane.txt", ios::in);
+	if (!fr)
+	{
+		cout << "File not found" << endl;
+	}
+	else
+	{
+		while (!fr.eof()) {
+			string name, id, address, email, halal;
+
+			getline(fr, name);
+			if (name.empty())
+			{
+				break;
+			}
+			
+			getline(fr, id);
+			getline(fr, address);
+			getline(fr, email);
+			getline(fr, halal);
+
+			
+			Customer obj(name, id, email, address, halal);
+			customer.push_back(obj);
+			string flightname, flightid, source, destination, time1, time2;
+			int totalseats, seatsbooked, seatsavailable;
+			getline(fr, flightname);
+			if (flightname.empty())
+			{
+				break;
+			}
+			getline(fr,flightid);
+			getline(fr, source);
+			getline(fr, destination);
+			getline(fr, time1);
+			getline(fr, time2);
+			fr >> totalseats;
+			fr >> seatsbooked;
+			fr >> seatsavailable;
+			Flight obj1(flightname, flightid, source, destination, time1, time2, totalseats);
+			flightlist.push_back(obj1);
+
+
+		}
+	}
+	fr.close();
+}
 int main()
 {
 	int choice;
@@ -658,7 +741,8 @@ int main()
 		cout << "7.Reserve a seat for the customer " << endl;
 		cout << "8.Cancel a seat for the customer " << endl;
 		cout << "9.Show summary for a customer " << endl;
-		cout << "10. Exit" << endl;
+		cout << "10.Make a file" << endl;
+		cout << "11. Exit" << endl;
 		cout << "Enter the choice " << endl;
 		cin >> choice;
 		getchar();
@@ -710,6 +794,12 @@ int main()
 			break;
 		}
 		case 10:
+		{
+			writedata();
+			readdata();
+			break;
+		}
+		case 11:
 		{
 			return 0;
 		}
