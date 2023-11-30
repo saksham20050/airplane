@@ -653,7 +653,7 @@ void writedata()
 		fw << customer[x].getid() << endl;
 		fw << customer[x].getaddress() << endl;
 		fw << customer[x].getemail() << endl;
-		fw << customer[x].getname() << endl;
+		fw << customer[x].gethalal() << endl;
 
 	}
 	for (x = 0; x < flightlist.size(); x++)
