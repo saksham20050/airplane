@@ -9,6 +9,114 @@ vector<Customer>customer;
 vector<Flight>flightlist;
 vector<Customer>customerreserve;
 int x;
+void writedataforcustomer(vector<Customer>customer)
+{
+	ofstream fw("customerfile.txt", ios::out / ios::app);
+	for (x = 0; x < customer.size(); x++)
+	{
+		fw << customer[x].getname() << endl;
+		fw << customer[x].getid() << endl;
+		fw << customer[x].getaddress() << endl;
+		fw << customer[x].getemail() << endl;
+		fw << customer[x].gethalal() << endl;
+
+	}
+	fw.close();
+
+}
+void writedataforflight(vector<Flight>flightlist)
+{
+	ofstream fw("Flightfile.txt", ios::out / ios::app);
+	for (x = 0; x < flightlist.size(); x++)
+	{
+		fw << flightlist[x].getflightid() << endl;
+		fw << flightlist[x].getflightname() << endl;
+		fw << flightlist[x].getsource() << endl;
+		fw << flightlist[x].getdestination() << endl;
+		fw << flightlist[x].gettime1() << endl;
+		fw << flightlist[x].gettime2() << endl;
+		fw << flightlist[x].getseatsavailable() << endl;
+
+	}
+	fw.close();
+}
+vector<Customer>readdataforcustomer()
+{
+	vector<Customer>customerlist;
+	ifstream fr("customerfile.txt", ios::in);
+	if (!fr)
+	{
+		cout << "File not found" << endl;
+	}
+	else
+	{
+		while (!fr.eof()) {
+			string name, id, address, email, halal;
+
+			getline(fr, name);
+			if (name.empty())
+			{
+				break;
+			}
+
+			getline(fr, id);
+			getline(fr, address);
+			getline(fr, email);
+			getline(fr, halal);
+			if (fr.eof())
+			{
+				break;
+			}
+
+			Customer obj(name, id, email, address, halal);
+			customerlist.push_back(obj);
+
+
+
+		}
+		return customerlist;
+	}
+	fr.close();
+}
+vector<Flight>readforflight()
+{
+	vector<Flight>flightlist;
+	ifstream fr("Flightfile.txt", ios::in);
+	string flightname, flightid, source, destination, time1, time2;
+	int totalseats, seatsbooked, seatsavailable;
+	getline(fr, flightname);
+	if (!fr)
+	{
+		cout << "File not found " << endl;
+	}
+	else
+	{
+		while (!fr.eof())
+		{
+			if (flightname.empty())
+			{
+				break;
+			}
+			getline(fr, flightid);
+			getline(fr, source);
+			getline(fr, destination);
+			getline(fr, time1);
+			getline(fr, time2);
+			fr >> totalseats;
+			fr >> seatsbooked;
+			fr >> seatsavailable;
+			if (fr.eof())
+			{
+				break;
+			}
+			Flight obj1(flightname, flightid, source, destination, time1, time2, totalseats);
+			flightlist.push_back(obj1);
+		}
+		return flightlist;
+	}
+	fr.close();
+
+}
 bool checkemail(string customeremail)
 {
 	bool flag = false;
@@ -529,7 +637,14 @@ void reservationofflight()
 	int idx,m;
 	cout << "Enter the id of the customer against whom u wanna do the reservation " << endl;
 	getline(cin, hotid);
+	cout << hotid;
 	bool l = false;
+	for (x = 0; x < customer.size(); x++)
+	{
+		cout << "NAME : " << customer[x].getname() << endl;
+		cout << "Id: " << customer[x].getid() << endl;
+
+	}
 	for (x = 0; x < customer.size(); x++)
 	{
 		if (customer[x].getid() == hotid)
@@ -651,114 +766,7 @@ void showsummary()
 	}
 
 }
-void writedataforcustomer(vector<Customer>customer)
-{
-	ofstream fw("customerfile.txt", ios::out / ios::app);
-	for (x = 0; x < customer.size(); x++)
-	{
-		fw << customer[x].getname() << endl;
-		fw << customer[x].getid() << endl;
-		fw << customer[x].getaddress() << endl;
-		fw << customer[x].getemail() << endl;
-		fw << customer[x].gethalal() << endl;
 
-	}
-	fw.close();
-	
-}
-void writedataforflight(vector<Flight>flightlist)
-{
-	ofstream fw("Flightfile.txt", ios::out / ios::app);
-	for (x = 0; x < flightlist.size(); x++)
-	{
-		fw << flightlist[x].getflightid() << endl;
-		fw << flightlist[x].getflightname() << endl;
-		fw << flightlist[x].getsource() << endl;
-		fw << flightlist[x].getdestination() << endl;
-		fw << flightlist[x].gettime1() << endl;
-		fw << flightlist[x].gettime2() << endl;
-		fw << flightlist[x].getseatsavailable() << endl;
-
-	}
-	fw.close();
-}
-vector<Customer>readdataforcustomer()
-{
-	vector<Customer>customerlist;
-	ifstream fr("customerfile.txt", ios::in);
-	if (!fr)
-	{
-		cout << "File not found" << endl;
-	}
-	else
-	{
-		while (!fr.eof()) {
-			string name, id, address, email, halal;
-
-			getline(fr, name);
-			if (name.empty())
-			{
-				break;
-			}
-
-			getline(fr, id);
-			getline(fr, address);
-			getline(fr, email);
-			getline(fr, halal);
-			if (fr.eof())
-			{
-				break;
-			}
-			
-			Customer obj(name, id, email, address, halal);
-			customerlist.push_back(obj);
-			
-
-
-		}
-		return customerlist;
-	}
-	fr.close();
-}
-vector<Flight>readforflight()
-{
-	vector<Flight>flightlist;
-	ifstream fr("Flightfile.txt", ios::in);
-	string flightname, flightid, source, destination, time1, time2;
-	int totalseats, seatsbooked, seatsavailable;
-	getline(fr, flightname);
-	if (!fr)
-	{
-		cout << "File not found " << endl;
-	}
-	else
-	{
-		while (!fr.eof())
-		{
-			if (flightname.empty())
-			{
-				break;
-			}
-			getline(fr, flightid);
-			getline(fr, source);
-			getline(fr, destination);
-			getline(fr, time1);
-			getline(fr, time2);
-			fr >> totalseats;
-			fr >> seatsbooked;
-			fr >> seatsavailable;
-			if (fr.eof())
-			{
-				break;
-			}
-			Flight obj1(flightname, flightid, source, destination, time1, time2, totalseats);
-			flightlist.push_back(obj1);
-		}
-		return flightlist;
-	}
-	fr.close();
-	
-}
 int main()
 {
 	int choice;
