@@ -50,7 +50,7 @@ bool checkdigitid(string customerid)
 	}
 	return flag;
 }
-void addcustomer()
+void addcustomer(vector<Customer>customer)
 {
 	string customername, customerid, customeremail, customeraddress, customerhalal;
 	while (true)
@@ -140,9 +140,10 @@ void addcustomer()
 	}
 	Customer obj(customername, customerid, customeremail, customeraddress, customerhalal);
 	customer.push_back(obj);
+	writedataforcustomer(customer);
 	cout << "Customer added successfully " << endl;
 }
-void editcustomer()
+void editcustomer(vector<Customer>customer)
 {
 	string customername, customeremail, customeraddress, customerhalal,editid;
 	int idx;
@@ -224,10 +225,11 @@ void editcustomer()
 		}
 		Customer obj1(customername, editid, customeremail, customeraddress, customerhalal);
 		customer[idx] = obj1;
+		writedataforcustomer(customer);
 		cout << "Customer edited successfully " << endl;
 	}
 }
-void deletecustomer()
+void deletecustomer(vector<Customer>customer)
 {
 	string findid;
 	int idx;
@@ -250,6 +252,7 @@ void deletecustomer()
 	else
 	{
 		customer.erase(customer.begin() + idx);
+		writedataforcustomer(customer);
 		cout << "Customer Deletion Successfull" << endl;
 	}
 }
@@ -268,7 +271,7 @@ bool checkflightid(string idflight)
 
 }
 
-void addflight()
+void addflight(vector<Flight>flightlist)
 {
 	string nameflight, idflight, sourceflight, destinationflight, time1flight, time2flight;
 	int totalseatsflight;
@@ -375,9 +378,10 @@ void addflight()
 	}
 	Flight obj(nameflight, idflight, sourceflight, destinationflight, time1flight, time2flight, totalseatsflight);
 	flightlist.push_back(obj);
+	writedataforflight(flightlist);
 	cout << "Flight added successfull" << endl;
 }
-void editflight()
+void editflight(vector<Flight>flightlist)
 {
 	string findid;
 	int idx;
@@ -487,10 +491,12 @@ void editflight()
 		}
 		Flight obj1(nameflight, findid, sourceflight, destinationflight, time1flight, time2flight, totalseatsflight);
 		flightlist[idx] = obj1;
+		writedataforflight(flightlist);
+
 		cout << "Flight edited Successfull" << endl;
 	}
 }
-void deleteflight()
+void deleteflight(vector<Flight>flightlist)
 {
 	string findid;
 	int idx;
@@ -513,6 +519,7 @@ void deleteflight()
 	else
 	{
 		flightlist.erase(flightlist.begin() + idx);
+		writedataforflight(flightlist);
 		cout << "Flight Deletion Successfull " << endl;
 	}
 }
@@ -644,9 +651,9 @@ void showsummary()
 	}
 
 }
-void writedata()
+void writedataforcustomer(vector<Customer>customer)
 {
-	ofstream fw("airplane.txt", ios::out / ios::app);
+	ofstream fw("customerfile.txt", ios::out / ios::app);
 	for (x = 0; x < customer.size(); x++)
 	{
 		fw << customer[x].getname() << endl;
@@ -656,6 +663,12 @@ void writedata()
 		fw << customer[x].gethalal() << endl;
 
 	}
+	fw.close();
+	
+}
+void writedataforflight(vector<Flight>flightlist)
+{
+	ofstream fw("Flightfile.txt", ios::out / ios::app);
 	for (x = 0; x < flightlist.size(); x++)
 	{
 		fw << flightlist[x].getflightid() << endl;
@@ -667,19 +680,12 @@ void writedata()
 		fw << flightlist[x].getseatsavailable() << endl;
 
 	}
-	for (x = 0; x < customerreserve.size(); x++)
-	{
-		fw << customerreserve[x].getid() << endl;
-		fw << customerreserve[x].getname() << endl;
-		fw << customerreserve[x].getemail() << endl;
-		fw << customerreserve[x].getaddress() << endl;
-		fw << customerreserve[x].gethalal() << endl;
-	}
 	fw.close();
 }
-void readdata()
+vector<Customer>readdataforcustomer()
 {
-	ifstream fr("airplane.txt", ios::in);
+	vector<Customer>customerlist;
+	ifstream fr("customerfile.txt", ios::in);
 	if (!fr)
 	{
 		cout << "File not found" << endl;
@@ -694,23 +700,46 @@ void readdata()
 			{
 				break;
 			}
-			
+
 			getline(fr, id);
 			getline(fr, address);
 			getline(fr, email);
 			getline(fr, halal);
-
+			if (fr.eof())
+			{
+				break;
+			}
 			
 			Customer obj(name, id, email, address, halal);
-			customer.push_back(obj);
-			string flightname, flightid, source, destination, time1, time2;
-			int totalseats, seatsbooked, seatsavailable;
-			getline(fr, flightname);
+			customerlist.push_back(obj);
+			
+
+
+		}
+		return customerlist;
+	}
+	fr.close();
+}
+vector<Flight>readforflight()
+{
+	vector<Flight>flightlist;
+	ifstream fr("Flightfile.txt", ios::in);
+	string flightname, flightid, source, destination, time1, time2;
+	int totalseats, seatsbooked, seatsavailable;
+	getline(fr, flightname);
+	if (!fr)
+	{
+		cout << "File not found " << endl;
+	}
+	else
+	{
+		while (!fr.eof())
+		{
 			if (flightname.empty())
 			{
 				break;
 			}
-			getline(fr,flightid);
+			getline(fr, flightid);
 			getline(fr, source);
 			getline(fr, destination);
 			getline(fr, time1);
@@ -718,13 +747,17 @@ void readdata()
 			fr >> totalseats;
 			fr >> seatsbooked;
 			fr >> seatsavailable;
+			if (fr.eof())
+			{
+				break;
+			}
 			Flight obj1(flightname, flightid, source, destination, time1, time2, totalseats);
 			flightlist.push_back(obj1);
-
-
 		}
+		return flightlist;
 	}
 	fr.close();
+	
 }
 int main()
 {
@@ -741,8 +774,9 @@ int main()
 		cout << "7.Reserve a seat for the customer " << endl;
 		cout << "8.Cancel a seat for the customer " << endl;
 		cout << "9.Show summary for a customer " << endl;
-		cout << "10.Make a file" << endl;
-		cout << "11. Exit" << endl;
+		cout << "10.Make a file for customer" << endl;
+		cout << "11.Make a file for flight" << endl;
+		cout << "12.Exit" << endl;
 		cout << "Enter the choice " << endl;
 		cin >> choice;
 		getchar();
@@ -750,32 +784,32 @@ int main()
 		{
 		case 1:
 		{
-			addcustomer();
+			addcustomer(customer);
 			break;
 		}
 		case 2:
 		{
-			editcustomer();
+			editcustomer(customer);
 			break;
 		}
 		case 3:
 		{
-			deletecustomer();
+			deletecustomer(customer);
 			break;
 		}
 		case 4:
 		{
-			addflight();
+			addflight(flightlist);
 			break;
 		}
 		case 5:
 		{
-			editflight();
+			editflight(flightlist);
 			break;
 		}
 		case 6:
 		{
-			deleteflight();
+			deleteflight(flightlist);
 			break;
 		}
 		case 7:
@@ -795,11 +829,16 @@ int main()
 		}
 		case 10:
 		{
-			writedata();
-			readdata();
+			writedataforcustomer(customer);
+			readdataforcustomer();
 			break;
 		}
 		case 11:
+		{
+			writedataforflight(flightlist);
+			readdataforcustomer();
+		}
+		case 12:
 		{
 			return 0;
 		}
