@@ -9,6 +9,8 @@ vector<Customer>customer;
 vector<Flight>flightlist;
 vector<Customer>customerreserve;
 int x;
+vector<Customer>readdataforcustomer();
+vector<Flight>readforflight();
 void writedataforcustomer(vector<Customer>customer)
 {
 	ofstream fw("customerfile.txt", ios::out / ios::app);
@@ -770,8 +772,10 @@ void showsummary()
 int main()
 {
 	int choice;
+	
 	while (true)
 	{
+		
 		cout << "*****Menu*****" << endl;
 		cout << "1.Add Customer " << endl;
 		cout << "2.Edit Customer details" << endl;
@@ -782,9 +786,7 @@ int main()
 		cout << "7.Reserve a seat for the customer " << endl;
 		cout << "8.Cancel a seat for the customer " << endl;
 		cout << "9.Show summary for a customer " << endl;
-		cout << "10.Make a file for customer" << endl;
-		cout << "11.Make a file for flight" << endl;
-		cout << "12.Exit" << endl;
+		cout << "10.Exit" << endl;
 		cout << "Enter the choice " << endl;
 		cin >> choice;
 		getchar();
@@ -837,19 +839,9 @@ int main()
 		}
 		case 10:
 		{
-			writedataforcustomer(customer);
-			readdataforcustomer();
-			break;
-		}
-		case 11:
-		{
-			writedataforflight(flightlist);
-			readdataforcustomer();
-		}
-		case 12:
-		{
 			return 0;
 		}
+		
 		default:
 		{
 			cout << "Pls enter a valid choice" << endl;
