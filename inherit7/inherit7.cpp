@@ -633,7 +633,7 @@ void deleteflight(vector<Flight>flightlist)
 		cout << "Flight Deletion Successfull " << endl;
 	}
 }
-void reservationofflight()
+void reservationofflight(vector<Customer>customer)
 {
 	string hotid,chillid;
 	int idx,m;
@@ -824,7 +824,7 @@ int main()
 		}
 		case 7:
 		{
-			reservationofflight();
+			reservationofflight(customer);
 			break;
 		}
 		case 8:
